@@ -62,7 +62,18 @@ try
 		});
 
 		data.pipe(request);
-		request.on("response", res => console.log(res.statusCode));
+		request.on("response", function(res)
+		{
+			let body = "";
+			res.on("readable", function()
+			{
+				body += res.read();
+			});
+			res.on("end", function()
+			{
+				console.log(body);
+			});
+		});
 	})();
 }
 
