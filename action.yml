@@ -1,30 +1,32 @@
-name: 'Publish to ESOUI'
-description: 'Publish to ESOUI'
+name: "Publish to ESOUI"
+description: "Publish to ESOUI"
+
 inputs:
   readme:
-    description: 'Path of the readme file (not including folder path)'
+    description: "Path of the readme file (not including folder path)"
     required: false
-    default: 'README.md'
+    default: "README.md"
   changelog:
-    description: 'Path of the changelog file (not including folder path)'
+    description: "Path of the changelog file (not including folder path)"
     required: false
-    default: 'changelog.txt'
+    default: "changelog.txt"
   EsoUIToken:
-    description: 'Token from EsoUI'
+    description: "Token from EsoUI"
     required: true
   EsoUIID:
-    description: 'ID from EsoUI'
+    description: "ID from EsoUI"
     required: true
   version:
-    description: 'Version of the addon'
+    description: "Version of the addon"
     required: true
   artifact:
-    description: 'Build Artifact to upload'
+    description: "Build Artifact to upload"
     required: true
   dryRun:
     description: "Test your configuration against the ESOUI Web API"
     required: false
     default: false
+
 runs:
-  using: 'node16'
-  main: 'index.js'
+  using: "node16"
+  main: "dist/index.js"
