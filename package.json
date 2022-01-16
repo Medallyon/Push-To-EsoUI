@@ -1,6 +1,6 @@
 {
   "name": "pushtoesoui",
-  "version": "1.0.0",
+  "version": "1.6.2",
   "description": "A github action to push to EsoUI",
   "main": "index.js",
   "scripts": {
