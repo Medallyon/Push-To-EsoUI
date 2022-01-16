@@ -1,10 +1,6 @@
-name: 'Upload Code to EsoUI'
-description: 'Upload Code to EsoUI'
+name: 'Publish to ESOUI'
+description: 'Publish to ESOUI'
 inputs:
-  path:
-    description: 'Path of the files (folder name)'
-    required: true
-    default: './'
   readme:
     description: 'Path of the readme file (not including folder path)'
     required: false
@@ -25,6 +21,10 @@ inputs:
   artifact:
     description: 'Build Artifact to upload'
     required: true
+  dryRun:
+    description: "Test your configuration against the ESOUI Web API"
+    required: false
+    default: false
 runs:
-  using: 'node12'
+  using: 'node14'
   main: 'index.js'
