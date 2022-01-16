@@ -1,23 +1,10 @@
 const core = require("@actions/core")
 	, github = require("@actions/github")
-	, http = require("https")
-	, fs = require("fs").promises
-	, FormData = require("form-data");
+	, request = require("request")
+	, { createReadStream } = require("fs")
+	, { readFile } = require("fs").promises;
 
 const API_DOMAIN = "https://api.esoui.com";
-
-async function readFile(path, callback)
-{
-	try
-	{
-		callback(await fs.readFile(path, "utf8"));
-	}
-
-	catch (err)
-	{
-		console.error(err);
-	}
-}
 
 function replaceMD(text)
 {
@@ -41,38 +28,29 @@ try
 			, artifact = core.getInput("artifact")
 			, dryRun = core.getInput("dryRun");
 
-		const data = new FormData();
-		data.append("id", +id);
-		data.append("version", version);
-
-		data.append(replaceMD(await fs.readFile(readmePath, "utf8")));
-		data.append(await fs.readFile(changelogPath, "utf8"));
-		data.append("updatefile", fs.createReadStream(artifact));
-
 		let endpoint = API_DOMAIN + "/addons/update";
 		if (dryRun)
 			endpoint += "test";
 
-		const request = http.request(endpoint, {
-			method: "post",
+		request({
+			method: "POST",
+			json: true,
+			uri: endpoint,
 			headers: {
-				"x-api-token": apiToken,
-				...data.getHeaders()
+				"x-api-token": apiToken
+			},
+			formData: {
+				id: +id,
+				version,
+				description: replaceMD(await readFile(readmePath, "utf8")),
+				changelog: await readFile(changelogPath, "utf8"),
+				updatefile: createReadStream(artifact)
 			}
-		});
-
-		data.pipe(request);
-		request.on("response", function(res)
+		}, function(err, res, body)
 		{
-			let body = "";
-			res.on("readable", function()
-			{
-				body += res.read();
-			});
-			res.on("end", function()
-			{
-				console.log(body);
-			});
+			if (err)
+				return core.setFailed(err.message);
+			console.log("Upload successful:", body)
 		});
 	})();
 }
