@@ -39276,12 +39276,14 @@ try
 			, id = core.getInput("EsoUIID")
 			, version = core.getInput("version")
 			, artifact = core.getInput("artifact")
-			, dryRun = core.getInput("dryRun");
+			// , dryRun = core.getInput("dryRun");
+			, dryRun = "false";
 
 		let endpoint = API_DOMAIN + "/addons/update";
-		if (dryRun)
+		if (dryRun.toLowerCase() === "true")
 			endpoint += "test";
 
+		console.log("Final endpoint is", endpoint);
 		request({
 			method: "POST",
 			json: true,
